@@ -11,6 +11,7 @@ pub fn clock(app: &Application ){
         .margin_end(5)
         .width_request(100)
         .build();
+    //let button2
     // connect the Button
     button1.connect_clicked(|button1: &Button|{
         button1.set_label("Noob");
