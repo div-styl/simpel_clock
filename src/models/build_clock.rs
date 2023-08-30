@@ -1,5 +1,6 @@
 use gtk4::prelude::*;
 use gtk4::{Application, ApplicationWindow, Button};
+use std::process::exit;
 
 pub fn clock(app: &Application ){
     //create the Button
@@ -15,7 +16,8 @@ pub fn clock(app: &Application ){
     // connect the Button
     button1.connect_clicked(|button1: &Button|{
         button1.set_label("Noob");
-        eprintln!("clicked");
+        eprintln!("Button is killed");
+        exit(0);
     });
 
     // create ApplicationWindow

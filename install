@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2059
 # color
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
@@ -44,20 +45,32 @@ fi
 }
 
 distro_check(){
-    os = /etc/os-release
-    case $os in
-        "ubuntu"|"debian"|"kali")
-            cprint "$GREEN" "[+] Your distro is supported"
-            ;;
-        "fedora"|"centos"|"redhat")
-            cprint "$GREEN" "[+] Your distro is supported"
-            ;;
-        "Arch Linux"|"Manjaro Linux")
-            cprint "$GREEN" "[+] Your distro is supported"
-            ;;
-        *)
-            cprint "$RED" "[!] Your distro is not supported"
-            exit 1
-            ;;
-    esac
+  os=$(lsb_release -d | awk -F"\t" '{print $2}')
+  
+  case "$os" in
+    *"Ubuntu"*|*"Debian"*|*"Kali"*)
+      cprint "$GREEN" "[+] Your distro is supported"
+      sudo apt install libgtk-4-dev build-essential 
+      ;;
+    *"Fedora"*|*"CentOS"*|*"RedHat"*)
+      cprint "$GREEN" "[+] Your distro is supported"
+      sudo dnf install gtk4-devel gcc 
+      ;;
+    *"Arch Linux"*|*"Manjaro Linux"*|*"Archcraft"*)
+      cprint "$GREEN" "[+] Your distro is supported Arch"
+      sudo pacman -S gtk4 base-devel
+      ;;
+    *)
+      cprint "$RED" "[!] Your distro is not supported"
+      exit 1
+      ;;
+  esac
 }
+
+
+# The main
+root
+# check if rust in your local + clone repo
+install-rust
+# install the requirements
+distro_check

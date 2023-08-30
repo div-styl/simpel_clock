@@ -5,7 +5,7 @@ use crate::models::build_clock;
 const APP_ID: &str = "simple_clock";
 
 pub fn launch_win() -> glib::ExitCode {
-    // run the app
+    // Run the app
     let app = Application::builder().application_id(APP_ID).build();
 
     // Corrected method name: connect_activate
@@ -13,7 +13,7 @@ pub fn launch_win() -> glib::ExitCode {
         build_clock::clock(app);
     });
 
-    // run the window
+    // Run the application
     app.run()
 }
 
