@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# color
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+RED='\033[0;31m'
+MAGENTA='\033[0;35m'
+NC='\033[0m' # No Color
+
+cprint(){
+  local color=$1
+  local text=$2
+  local NOC=$NC
+  printf "$color""$text""$NOC\n"
+}
+
+# check if the script is running as root
+root(){
+if [[ $EUID -ne 0 ]]; then
+    cprint "${RED}" "[!] This script must be run as root please use sudo ./install"
+    exit 1
+else
+    cprint "${GREEN}" "[+] This script is running as root"
+fi
+}
+# Install Rust if not in your machine
+install-rust(){
+    
+cprint "$RED" "[*] Checking if system have required packages and commands\n"
+if [ -x "$(command -v rustc)" ] && [ -x "$(command -v cargo)" ]; then
+    cprint "$YELLOW" "[*] Rust is already installed. Cloning repo..."
+    git clone --depth=1 https://github.com/div-styl/simpel_clock.git > /dev/null 2>&1
+    cprint "$GREEN" "[*] simple_clock is cloned successfully. Use 'cargo run' to run it."
+else
+    cprint "$MAGENTA" "[!] Installing Rust"
+    if curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh; then
+        cprint "$YELLOW" "[*] Rust is installed. Cloning repo..."
+        git clone --depth=1 https://github.com/div-styl/simpel_clock.git > /dev/null 2>&1
+        cprint "$GREEN" "[*] simple_clock cloned successfully. Use 'cargo run' to run it."
+    else
+        cprint "$RED" "[!] Rust is not installed"
+        exit 1
+    fi
+fi
+}
+
+distro_check(){
+    os = /etc/os-release
+    case $os in
+        "ubuntu"|"debian"|"kali")
+            cprint "$GREEN" "[+] Your distro is supported"
+            ;;
+        "fedora"|"centos"|"redhat")
+            cprint "$GREEN" "[+] Your distro is supported"
+            ;;
+        "Arch Linux"|"Manjaro Linux")
+            cprint "$GREEN" "[+] Your distro is supported"
+            ;;
+        *)
+            cprint "$RED" "[!] Your distro is not supported"
+            exit 1
+            ;;
+    esac
+}
