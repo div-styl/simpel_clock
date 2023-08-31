@@ -111,6 +111,7 @@ name = "clock"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "glib",
  "gtk4",
  "pango",
 ]
