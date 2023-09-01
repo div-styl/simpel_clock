@@ -1,48 +1,34 @@
-use gtk4::prelude::*;
-use gtk4::{Application, ApplicationWindow};
-use crate::models::time::timer;
-use std::sync::mpsc;
-use std::thread;
-
-
+use std::time::Duration;
+/* use std::process::exit;*/
+use chrono::Local;
+use glib::{timeout_add_local, ControlFlow};
+use gtk4::{
+    prelude::*, Application, ApplicationWindow, CssProvider, Label,
+    STYLE_PROVIDER_PRIORITY_APPLICATION
+};
 pub fn clock(app: &Application) {
-    let clock_label = gtk4::Label::new(None);
-
-    // Create ApplicationWindow
+    let clock_label = Label::new(None);
+    // let button_exit = Button::with_label("Exit");
+    //
+    // button_exit.connect_clicked(|_| {
+    //     exit(0);
+    // });
     let win = ApplicationWindow::builder()
         .application(app)
         .title("Clock App")
-        .child(&clock_label) // Add the label to the window
+        .child(&clock_label)
+        /* .child(&button_exit) */
         .build();
 
-    // Create a channel to send updates from the timer thread
-    let (tx, rx) = mpsc::channel();
+    let css_provider = CssProvider::new();
+    css_provider.load_from_data("window { background-color: #E2C799; }");
+    win.style_context()
+        .add_provider(&css_provider, STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-    // Clone the label for use in the closure
-    let label_clone = clock_label.clone();
-
-    // Clone the sender for the timer thread
-    let sender_clone = tx.clone();
-
-    // Apply CSS
-    let css_provider = gtk4::CssProvider::new();
-    css_provider.load_from_data("window { background-color: #183D3D; }");
-    let style_context = win.style_context();
-    style_context.add_provider(&css_provider, gtk4::STYLE_PROVIDER_PRIORITY_APPLICATION);
-
-    // Spawn a new thread to update the clock label
-    thread::spawn(move || {
-        timer(sender_clone);
+    timeout_add_local(Duration::from_millis(100), move || {
+        clock_label.set_text(&Local::now().time().format("%I:%M:%S %p").to_string());
+        ControlFlow::Continue
     });
 
-    // Listen for updates from the timer thread and update the label
-    glib::timeout_add_seconds_local(1, move || {
-        if let Ok(formatted_time) = rx.try_recv() {
-            label_clone.set_text(&formatted_time);
-        }
-        std::ops::ControlFlow::Continue(true)
-    });
-
-    // Present window
     win.present();
 }
