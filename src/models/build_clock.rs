@@ -9,7 +9,7 @@ use gtk4::{
 pub fn clock(app: &Application) {
     let clock_label = Label::new(None);
     // let button_exit = Button::with_label("Exit");
-    //
+    
     // button_exit.connect_clicked(|_| {
     //     exit(0);
     // });
