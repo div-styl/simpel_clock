@@ -112,7 +112,6 @@ dependencies = [
  "chrono",
  "glib",
  "gtk4",
- "pango",
 ]
 
 [[package]]
