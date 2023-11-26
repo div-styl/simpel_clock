@@ -18,12 +18,12 @@ pub fn clock(app: &Application) {
     let css_provider = CssProvider::new();
     
     // Combine the CSS rules into a single string
-    let css_data = "
+    let css_data ="
         window { 
             background-color: #0F0F0F; 
             color: #363062;
             font-family: monospace;
-            font-size: 48px;
+            font-size: 40px;
             font-weight: bold;
         }
     ";
@@ -37,6 +37,9 @@ pub fn clock(app: &Application) {
         clock_label.set_text(&Local::now().time().format("%I:%M:%S %p").to_string());
         ControlFlow::Continue
     });
+
+    // Ensure the window and its children are shown
+    win.show();
 
     win.present();
 }

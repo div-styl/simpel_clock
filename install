@@ -23,6 +23,7 @@ else
     cprint "${GREEN}" "[+] This script is running as root"
 fi
 }
+
 # Install Rust if not in your machine
 install-rust(){
     
@@ -67,6 +68,10 @@ distro_check(){
   esac
 }
 
+run_app (){
+  cargo run
+  cargo clean
+}
 
 # The main
 root
@@ -74,3 +79,5 @@ root
 install-rust
 # install the requirements
 distro_check
+# run the app
+run_app
